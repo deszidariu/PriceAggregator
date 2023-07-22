@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PriceAggregator.Api.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Host.UseSerilog((context, oggingConfiguration) => 
+    oggingConfiguration.ReadFrom.Configuration(context.Configuration));
+
 var configuration = builder.Configuration;
 
 builder.Services.AddDbContext<PriceAggregatorContext>(options =>
-    options.UseSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."))
-        ) ;
+    options.UseSqlite(configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
 // Add services to the container.
 
@@ -25,10 +30,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.Logger.LogInformation("Starting the application");
 
 app.Run();

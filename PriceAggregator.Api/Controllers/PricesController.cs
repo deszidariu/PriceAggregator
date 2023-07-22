@@ -15,16 +15,20 @@ namespace PriceAggregator.Api.Controllers
     public class PricesController : ControllerBase
     {
         private readonly PriceAggregatorContext _context;
+        private readonly ILogger logger;
 
-        public PricesController(PriceAggregatorContext context)
+        public PricesController(PriceAggregatorContext context, ILogger<PricesController> logger)
         {
             _context = context;
+            this.logger = logger;
         }
 
         // GET: api/Prices
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Price>>> GetPrice()
         {
+            logger.LogInformation("Get all prices"); 
+
           if (_context.Price == null)
           {
               return NotFound();
