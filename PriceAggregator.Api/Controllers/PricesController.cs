@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PriceAggregator.Api.Data;
 using PriceAggregator.Api.Models;
+using PriceAggregator.Api.Services;
 
 namespace PriceAggregator.Api.Controllers
 {
@@ -15,25 +16,29 @@ namespace PriceAggregator.Api.Controllers
     public class PricesController : ControllerBase
     {
         private readonly PriceAggregatorContext _context;
+        private readonly IBitfinex bitfinex;
         private readonly ILogger logger;
 
-        public PricesController(PriceAggregatorContext context, ILogger<PricesController> logger)
+        public PricesController(PriceAggregatorContext context, IBitfinex bitfinex, ILogger<PricesController> logger)
         {
             _context = context;
+            this.bitfinex = bitfinex;
             this.logger = logger;
         }
 
         // GET: api/Prices
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Price>>> GetPrice()
+        public async Task<ActionResult<Price>> GetPrice()
         {
-            logger.LogInformation("Get all prices"); 
+            var date = DateTime.UtcNow;
+
+          var price = await bitfinex.GetPriceByHour(CurrencyCode.BTC, CurrencyCode.USD,date, date.AddHours(1));
 
           if (_context.Price == null)
           {
               return NotFound();
           }
-            return await _context.Price.ToListAsync();
+            return price;
         }
 
         // GET: api/Prices/5

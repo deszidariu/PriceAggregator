@@ -10,16 +10,12 @@ namespace PriceAggregator.Api.Models
         [Column("id")]
         public int Id { get; set; }
         [Column("close")]
-        public string Close { get; set; }
-        [Column("high")]
-        public string High { get; set; }
-        [Column("low")]
-        public string Low { get; set; }
-        [Column("open")]
-        public string Open { get; set; }
+        public float Close { get; set; }
         [Column("timestamp")]
         public string Timestamp { get; set; }
-        [Column("volume")]
-        public string Volume { get; set; }
+        [Column("fromcurrency")]
+        public CurrencyCode FromCurrency { get; set; }
+        [Column("tocurrency")]
+        public CurrencyCode ToCurrency { get; set; }
     }
 }
