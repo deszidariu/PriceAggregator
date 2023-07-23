@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -16,8 +17,8 @@ namespace PriceAggregator.Api.Migrations
                 {
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    close = table.Column<string>(type: "TEXT", nullable: false),
-                    timestamp = table.Column<string>(type: "TEXT", nullable: false),
+                    close = table.Column<decimal>(type: "TEXT", nullable: false),
+                    startdatetime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     fromcurrency = table.Column<int>(type: "INTEGER", nullable: false),
                     tocurrency = table.Column<int>(type: "INTEGER", nullable: false)
                 },

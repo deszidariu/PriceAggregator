@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
+using PriceAggregator.Api.Helpers;
 using PriceAggregator.Api.Models;
 using System.Globalization;
 using System.Net.Http;
@@ -40,20 +41,20 @@ namespace PriceAggregator.Api.Services
                 var contentStream =
                     await httpResponseMessage.Content.ReadAsStringAsync();
 
-                return ConvertBifinexResultToPriceModel(contentStream, fromCurrency, toCurrency);
+                return ConvertBifinexResultToPriceModel(contentStream, fromCurrency, toCurrency, from);
             }
 
             return null;
         }
 
-        private Price? ConvertBifinexResultToPriceModel(string contentStream, CurrencyCode fromCurrency, CurrencyCode toCurrency)
+        private Price? ConvertBifinexResultToPriceModel(string contentStream, CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from)
         {
             var listOfFildsValue = contentStream.Split(',');
 
             return new Price
             {
-                Close = decimal.Parse(listOfFildsValue[2]).ToString("N", CultureInfo.CurrentCulture),
-                Timestamp = listOfFildsValue[0].Substring(2, listOfFildsValue[0].Length - 3),
+                Close = decimal.Parse(listOfFildsValue[2]),
+                StartDateTime = from,
                 FromCurrency = fromCurrency,
                 ToCurrency = toCurrency
             };
@@ -61,9 +62,6 @@ namespace PriceAggregator.Api.Services
 
         private string GenerateUrlRequest(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
-            var unixTimeFrom = new DateTimeOffset(from);
-            var unixTimeTo = new DateTimeOffset(to);
-
             var bitfinexSourceEndPoint = configuration
                                 .GetSection(EXTERNAL_SOURCE_SECTION)
                                 .GetSection(BITFINEX_SECTION);
@@ -71,11 +69,11 @@ namespace PriceAggregator.Api.Services
             var bitfinexRequestUrl = QueryHelpers.AddQueryString
                                     ($"{bitfinexSourceEndPoint.Value}/candles/trade:1h:t{fromCurrency}{toCurrency}/hist",
                                      START_QUERYSTRING,
-                                     unixTimeFrom.ToUnixTimeMilliseconds().ToString());
+                                     from.ConvertFromDateToUnixTimeMillisecondsString());
 
             bitfinexRequestUrl = QueryHelpers.AddQueryString(bitfinexRequestUrl,
                                  END_QUERYSTRING,
-                                 unixTimeTo.ToUnixTimeMilliseconds().ToString());
+                                 to.ConvertFromDateToUnixTimeMillisecondsString());
 
             bitfinexRequestUrl = QueryHelpers.AddQueryString(bitfinexRequestUrl,
                                  LIMIT_QUERYSTRING,

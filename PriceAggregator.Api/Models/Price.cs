@@ -12,9 +12,9 @@ namespace PriceAggregator.Api.Models
         [Column("id")]
         public int Id { get; set; }
         [Column("close")]
-        public string Close { get; set; }
-        [Column("timestamp")]
-        public string Timestamp { get; set; }
+        public decimal Close { get; set; }
+        [Column("startdatetime")]
+        public DateTime StartDateTime { get; set; }
         [Column("fromcurrency")]
         public CurrencyCode FromCurrency { get; set; }
         [Column("tocurrency")]

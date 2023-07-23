@@ -15,6 +15,6 @@ namespace PriceAggregator.Api.Data
             this.Database.EnsureCreated();
         }
 
-        public DbSet<Price> Price { get; set; }
+        public DbSet<Price> Prices { get; set; }
     }
 }

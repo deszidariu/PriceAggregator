@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
+using PriceAggregator.Api.Helpers;
 using PriceAggregator.Api.Models;
 using System.Globalization;
 using System.Net.Http;
@@ -49,8 +50,8 @@ namespace PriceAggregator.Api.Services
 
                     return new Price
                     {
-                        Close = decimal.Parse(bitstampPriceModel.data.ohlc[0].close).ToString("N", CultureInfo.CurrentCulture),
-                        Timestamp = bitstampPriceModel.data.ohlc[0].timestamp,
+                        Close = decimal.Parse(bitstampPriceModel.data.ohlc[0].close),
+                        StartDateTime = from,
                         FromCurrency = fromCurrency,
                         ToCurrency = toCurrency
                     };
@@ -62,9 +63,6 @@ namespace PriceAggregator.Api.Services
 
         private string GenerateUrlRequest(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
-            var unixTimeFrom = new DateTimeOffset(from);
-            var unixTimeTo = new DateTimeOffset(to);
-
             var bitstampSourceEndPoint = _configuration
                                 .GetSection(EXTERNAL_SOURCE_SECTION)
                                 .GetSection(BITSTAMP_SECTION);
@@ -80,11 +78,11 @@ namespace PriceAggregator.Api.Services
 
             bitfinexRequestUrl = QueryHelpers.AddQueryString(bitfinexRequestUrl,
                                  START_QUERYSTRING,
-                                 unixTimeFrom.ToUnixTimeSeconds().ToString());
+                                 from.ConvertFromDateToUnixTimeSecondsString());
 
             bitfinexRequestUrl = QueryHelpers.AddQueryString(bitfinexRequestUrl,
                                  END_QUERYSTRING,
-                                 unixTimeTo.ToUnixTimeSeconds().ToString());
+                                 to.ConvertFromDateToUnixTimeSecondsString());
 
             return bitfinexRequestUrl;
         }
