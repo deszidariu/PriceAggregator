@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 using PriceAggregator.Api.Models;
+using System.Globalization;
 using System.Net.Http;
 using System.Text.Json;
 
 namespace PriceAggregator.Api.Services
 {
-    public class Bitfinex : IBitfinex
+    public class Bitfinex : IExternalSourcePrices
     {
         private const string EXTERNAL_SOURCE_SECTION = "ExternalSource";
         private const string BITFINEX_SECTION = "bitfinex";
@@ -23,7 +24,7 @@ namespace PriceAggregator.Api.Services
             this.configuration = configuration;
         }
 
-        public async Task<Price?> GetPriceByHour(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
+        public async Task<Price?> GetPriceByHourAsync(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
             var bitfinexRequestUrl = this.GenerateUrlRequest(fromCurrency, toCurrency, from, to); 
 
@@ -51,7 +52,7 @@ namespace PriceAggregator.Api.Services
 
             return new Price
             {
-                Close = float.Parse(listOfFildsValue[2]),
+                Close = decimal.Parse(listOfFildsValue[2]).ToString("N", CultureInfo.CurrentCulture),
                 Timestamp = listOfFildsValue[0].Substring(2, listOfFildsValue[0].Length - 3),
                 FromCurrency = fromCurrency,
                 ToCurrency = toCurrency
@@ -60,9 +61,6 @@ namespace PriceAggregator.Api.Services
 
         private string GenerateUrlRequest(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
-            from = new DateTime(from.Year, from.Month, from.Day, from.Hour, 0, 0);
-            to = new DateTime(to.Year, to.Month, to.Day, to.Hour, 0, 0);
-
             var unixTimeFrom = new DateTimeOffset(from);
             var unixTimeTo = new DateTimeOffset(to);
 

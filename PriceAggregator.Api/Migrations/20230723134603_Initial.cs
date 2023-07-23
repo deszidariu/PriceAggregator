@@ -17,11 +17,9 @@ namespace PriceAggregator.Api.Migrations
                     id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     close = table.Column<string>(type: "TEXT", nullable: false),
-                    high = table.Column<string>(type: "TEXT", nullable: false),
-                    low = table.Column<string>(type: "TEXT", nullable: false),
-                    open = table.Column<string>(type: "TEXT", nullable: false),
                     timestamp = table.Column<string>(type: "TEXT", nullable: false),
-                    volume = table.Column<string>(type: "TEXT", nullable: false)
+                    fromcurrency = table.Column<int>(type: "INTEGER", nullable: false),
+                    tocurrency = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

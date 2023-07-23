@@ -19,7 +19,9 @@ builder.Services.AddDbContext<PriceAggregatorContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<IBitfinex, Bitfinex>();
+builder.Services.AddScoped<IExternalSourcePrices, Bitfinex>();
+builder.Services.AddScoped<IExternalSourcePrices, Bitstamp>();
+builder.Services.AddTransient<IExternalSourcePricesFatory, ExternalSourcePricesFatory>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

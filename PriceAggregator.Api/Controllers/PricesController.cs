@@ -16,29 +16,29 @@ namespace PriceAggregator.Api.Controllers
     public class PricesController : ControllerBase
     {
         private readonly PriceAggregatorContext _context;
-        private readonly IBitfinex bitfinex;
-        private readonly ILogger logger;
+        private readonly IExternalSourcePricesFatory _externalSourcePricesFactory;
+        private readonly ILogger _logger;
 
-        public PricesController(PriceAggregatorContext context, IBitfinex bitfinex, ILogger<PricesController> logger)
+        public PricesController(PriceAggregatorContext context, IExternalSourcePricesFatory externalSourcePricesFatory, ILogger<PricesController> logger)
         {
             _context = context;
-            this.bitfinex = bitfinex;
-            this.logger = logger;
+            _externalSourcePricesFactory = externalSourcePricesFatory;
+            _logger = logger;
         }
 
         // GET: api/Prices
         [HttpGet]
-        public async Task<ActionResult<Price>> GetPrice()
+        [Route("datetime:DateTime")]
+        public async Task<ActionResult<IEnumerable<Price>>> GetPrice(DateTime datetime)
         {
-            var date = DateTime.UtcNow;
+          var price = await _externalSourcePricesFactory.GetInstance(typeof(Bitfinex)).GetPriceByHourAsync(CurrencyCode.BTC, CurrencyCode.USD, datetime, datetime.AddHours(1));
 
-          var price = await bitfinex.GetPriceByHour(CurrencyCode.BTC, CurrencyCode.USD,date, date.AddHours(1));
-
-          if (_context.Price == null)
+          var price2 = await _externalSourcePricesFactory.GetInstance(typeof(Bitstamp)).GetPriceByHourAsync(CurrencyCode.BTC, CurrencyCode.USD, datetime, datetime.AddHours(1));
+            if (_context.Price == null)
           {
               return NotFound();
           }
-            return price;
+            return new List<Price>() { price, price2};
         }
 
         // GET: api/Prices/5

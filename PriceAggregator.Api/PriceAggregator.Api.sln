@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceAggregator.Api", "PriceAggregator.Api.csproj", "{DFF04F35-D447-4815-BBF6-A9C13D177FF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceAggregatorTest", "..\PriceAggregatorTest\PriceAggregatorTest.csproj", "{66B8A6BF-C76D-4405-863A-431BFF5BD393}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{DFF04F35-D447-4815-BBF6-A9C13D177FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFF04F35-D447-4815-BBF6-A9C13D177FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFF04F35-D447-4815-BBF6-A9C13D177FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66B8A6BF-C76D-4405-863A-431BFF5BD393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66B8A6BF-C76D-4405-863A-431BFF5BD393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66B8A6BF-C76D-4405-863A-431BFF5BD393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66B8A6BF-C76D-4405-863A-431BFF5BD393}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

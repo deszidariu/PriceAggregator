@@ -28,30 +28,18 @@ namespace PriceAggregator.Api.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("close");
 
-                    b.Property<string>("High")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("high");
-
-                    b.Property<string>("Low")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("low");
-
-                    b.Property<string>("Open")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("open");
+                    b.Property<int>("FromCurrency")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("fromcurrency");
 
                     b.Property<string>("Timestamp")
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnName("timestamp");
 
-                    b.Property<string>("Volume")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("volume");
+                    b.Property<int>("ToCurrency")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("tocurrency");
 
                     b.HasKey("Id");
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PriceAggregator.Api.Models
@@ -7,10 +8,11 @@ namespace PriceAggregator.Api.Models
     [Table("prices")]
     public class Price
     {
+        [Key]
         [Column("id")]
         public int Id { get; set; }
         [Column("close")]
-        public float Close { get; set; }
+        public string Close { get; set; }
         [Column("timestamp")]
         public string Timestamp { get; set; }
         [Column("fromcurrency")]
