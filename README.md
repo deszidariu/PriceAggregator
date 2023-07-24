@@ -19,3 +19,9 @@
 - https://localhost:8765/api/Prices/getAllPricesBetweenTwoDates?StartYear=2022&StartMonth=07&StartDay=01&StartHour=0&EndYear=2023&EndMonth=12&EndDay=01&EndHour=23&convertFrom=BTC&convertTo=USD
 
 # To see the logs navigate to C:\logs directory.
+
+# Supported currencies :
+    -USD,
+    -EUR,
+    -BTC,
+    -ETH
