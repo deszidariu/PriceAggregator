@@ -34,7 +34,7 @@ namespace PriceAggregator.Api.Services
             HttpMethod.Get,
             bitstampRequestUrl);
 
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = _httpClientFactory.CreateClient("bitstamp");
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -64,11 +64,10 @@ namespace PriceAggregator.Api.Services
         private string GenerateUrlRequest(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
             var bitstampSourceEndPoint = _configuration
-                                .GetSection(EXTERNAL_SOURCE_SECTION)
-                                .GetSection(BITSTAMP_SECTION);
+                                .GetSection(EXTERNAL_SOURCE_SECTION)?[BITSTAMP_SECTION];
 
             var bitfinexRequestUrl = QueryHelpers.AddQueryString
-                                    ($"{bitstampSourceEndPoint.Value}/ohlc/{fromCurrency.ToString().ToLower()}{toCurrency.ToString().ToLower()}/",
+                                    ($"{bitstampSourceEndPoint}/ohlc/{fromCurrency.ToString().ToLower()}{toCurrency.ToString().ToLower()}/",
                                      STEP_QUERYSTRING,
                                      (hour * 60 * 60).ToString());
 

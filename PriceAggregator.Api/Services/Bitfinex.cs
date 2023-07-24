@@ -33,7 +33,7 @@ namespace PriceAggregator.Api.Services
             HttpMethod.Get,
             bitfinexRequestUrl);
 
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = _httpClientFactory.CreateClient("bitfinex");
             var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage);
 
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -63,11 +63,10 @@ namespace PriceAggregator.Api.Services
         private string GenerateUrlRequest(CurrencyCode fromCurrency, CurrencyCode toCurrency, DateTime from, DateTime to)
         {
             var bitfinexSourceEndPoint = configuration
-                                .GetSection(EXTERNAL_SOURCE_SECTION)
-                                .GetSection(BITFINEX_SECTION);
+                                .GetSection(EXTERNAL_SOURCE_SECTION)?[BITFINEX_SECTION];
 
             var bitfinexRequestUrl = QueryHelpers.AddQueryString
-                                    ($"{bitfinexSourceEndPoint.Value}/candles/trade:1h:t{fromCurrency}{toCurrency}/hist",
+                                    ($"{bitfinexSourceEndPoint}/candles/trade:1h:t{fromCurrency}{toCurrency}/hist",
                                      START_QUERYSTRING,
                                      from.ConvertFromDateToUnixTimeMillisecondsString());
 
