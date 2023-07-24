@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,10 +38,10 @@ namespace PriceAggregator.Api.Controllers
 
         // GET: api/Prices
         [HttpGet]
-        public async Task<ActionResult<Price>> GetPrice([FromQuery(Name = "datetime")] DateTime dateTime, [FromQuery(Name = "convertFrom")] string convertFrom, [FromQuery(Name = "convertTo")] string convertTo)
+        public async Task<ActionResult<Price>> GetPrice([FromQuery] DateQueryParameters dateParameters, [FromQuery(Name = "convertFrom")] string convertFrom, [FromQuery(Name = "convertTo")] string convertTo)
         {
+            var dateTime = new DateTime(dateParameters.Year, dateParameters.Month, dateParameters.Day, dateParameters.Hour, 0, 0);
             // set 0 minutes and 0 seconds
-            dateTime = dateTime.SetDateTimeWithZeroMinutesAndSeconds();
 
             if (Enum.TryParse(convertFrom.ToUpper(), out CurrencyCode from))
             {
@@ -91,8 +93,10 @@ namespace PriceAggregator.Api.Controllers
 
         [HttpGet]
         [Route("getAllPricesBetweenTwoDates")]
-        public async Task<ActionResult> GetPricesBetweenDates([FromQuery(Name = "startingDate")] DateTime startingDate, [FromQuery(Name = "endingDate")] DateTime endingDate, [FromQuery(Name = "convertFrom")] string convertFrom, [FromQuery(Name = "convertTo")] string convertTo)
+        public async Task<ActionResult> GetPricesBetweenDates([FromQuery] StartingDateQueryParameters startDate, [FromQuery] EndingDateQueryParameters endDate, [FromQuery(Name = "convertFrom")] string convertFrom, [FromQuery(Name = "convertTo")] string convertTo)
         {
+            var startingDate = new DateTime(startDate.StartYear, startDate.StartMonth, startDate.StartDay, startDate.StartHour, 0, 0);
+            var endingDate = new DateTime(endDate.EndYear, endDate.EndMonth, endDate.EndDay, endDate.EndHour, 0, 0);
 
             if (Enum.TryParse(convertFrom.ToUpper(), out CurrencyCode from))
             {
